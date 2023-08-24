@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-person-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-person-manager
+  template:
+    metadata:
+      labels:
+        app: go-person-manager
+    spec:
+      imagePullSecrets:
+      - name: do-registry
+      containers:
+      - name: go-person-manager
+        image: registry.digitalocean.com/cong-registry/go-person-manager:1.0
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: DB_HOST
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: DB_NAME
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: DB_PASSWORD
+
